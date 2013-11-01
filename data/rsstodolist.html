@@ -1,28 +1,35 @@
 <html>
     <style>
-        body                    { overflow-x: hidden; overflow-y: hidden; font-family: sans-serif; font-size: 9pt; background-color: transparent; color: black; }
-        input[type=image]       { border: 0; }
-        input[type=text]        { border: 1px solid grey; background-color: #E3E9EF;}
-        input#feed              { width: 80px; }
-        input#description       { width: 100%; }
-        a                       { cursor: pointer; }
-        #more                   { text-decoration: underline; }
-        fieldset                { display: none; }
-        #notification .info     { color: green; }
-        #notification .error    { color: red; }
+        body                        { overflow-x: hidden; overflow-y: hidden; font-family: sans-serif; font-size: 9pt; background-color: transparent; color: black; }
+        label                       { margin-right: 5px; font-weight: bold; }
+        input#feed                  { width: 80px; }
+        input#description           { width: 170px; }
+        input[type=image]           { border: 0; }
+        input[type=text,type=url]   { border: 1px solid grey; background-color: #E3E9EF;}
+        input[type=url]             { width: 240px;}
+        a, #more, legend            { cursor: pointer; }
+        #more,legend                { text-decoration: underline; }
+        h2                          { font-size: 12px; font-weight: normal; margin: 0 0; }
+        fieldset ul                 { padding: 0; margin: 0; }
+        fieldset li                 { display: block; }
+        hr                          { border: 1px solid #CCC; }
     </style>
     <body>
         <section>
-            Add current webpage to feed <input type="text" id="feed" value="somename" />
+            <label for="feed">Add current webpage to feed :</label><input type="text" id="feed" value="somename" />
             <input type="image" class="action" data-action="add" data-done="added" data-doing="adding" title="Add" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAJvSURBVDjLpZPrS5NhGIf9W7YvBYOkhlkoqCklWChv2WyKik7blnNris72bi6dus0DLZ0TDxW1odtopDs4D8MDZuLU0kXq61CijSIIasOvv94VTUfLiB74fXngup7nvrnvJABJ/5PfLnTTdcwOj4RsdYmo5glBWP6iOtzwvIKSWstI0Wgx80SBblpKtE9KQs/We7EaWoT/8wbWP61gMmCH0lMDvokT4j25TiQU/ITFkek9Ow6+7WH2gwsmahCPdwyw75uw9HEO2gUZSkfyI9zBPCJOoJ2SMmg46N61YO/rNoa39Xi41oFuXysMfh36/Fp0b7bAfWAH6RGi0HglWNCbzYgJaFjRv6zGuy+b9It96N3SQvNKiV9HvSaDfFEIxXItnPs23BzJQd6DDEVM0OKsoVwBG/1VMzpXVWhbkUM2K4oJBDYuGmbKIJ0qxsAbHfRLzbjcnUbFBIpx/qH3vQv9b3U03IQ/HfFkERTzfFj8w8jSpR7GBE123uFEYAzaDRIqX/2JAtJbDat/COkd7CNBva2cMvq0MGxp0PRSCPF8BXjWG3FgNHc9XPT71Ojy3sMFdfJRCeKxEsVtKwFHwALZfCUk3tIfNR8XiJwc1LmL4dg141JPKtj3WUdNFJqLGFVPC4OkR4BxajTWsChY64wmCnMxsWPCHcutKBxMVp5mxA1S+aMComToaqTRUQknLTH62kHOVEE+VQnjahscNCy0cMBWsSI0TCQcZc5ALkEYckL5A5noWSBhfm2AecMAjbcRWV0pUTh0HE64TNf0mczcnnQyu/MilaFJCae1nw2fbz1DnVOxyGTlKeZft/Ff8x1BRssfACjTwQAAAABJRU5ErkJggg=="/>
             <input type="image" class="action" data-action="del" data-done="deleted" data-doing="deleting" alt="Delete" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAJdSURBVDjLpZP7S1NhGMf9W7YfogSJboSEUVCY8zJ31trcps6zTI9bLGJpjp1hmkGNxVz4Q6ildtXKXzJNbJRaRmrXoeWx8tJOTWptnrNryre5YCYuI3rh+8vL+/m8PA/PkwIg5X+y5mJWrxfOUBXm91QZM6UluUmthntHqplxUml2lciF6wrmdHriI0Wx3xw2hAediLwZRWRkCPzdDswaSvGqkGCfq8VEUsEyPF1O8Qu3O7A09RbRvjuIttsRbT6HHzebsDjcB4/JgFFlNv9MnkmsEszodIIY7Oaut2OJcSF68Qx8dgv8tmqEL1gQaaARtp5A+N4NzB0lMXxon/uxbI8gIYjB9HytGYuusfiPIQcN71kjgnW6VeFOkgh3XcHLvAwMSDPohOADdYQJdF1FtLMZPmslvhZJk2ahkgRvq4HHUoWHRDqTEDDl2mDkfheiDgt8pw340/EocuClCuFvboQzb0cwIZgki4KhzlaE6w0InipbVzBfqoK/qRH94i0rgokSFeO11iBkp8EdV8cfJo0yD75aE2ZNRvSJ0lZKcBXLaUYmQrCzDT6tDN5SyRqYlWeDLZAg0H4JQ+Jt6M3atNLE10VSwQsN4Z6r0CBwqzXesHmV+BeoyAUri8EyMfi2FowXS5dhd7doo2DVII0V5BAjigP89GEVAtda8b2ehodU4rNaAW+dGfzlFkyo89GTlcrHYCLpKD+V7yeeHNzLjkp24Uu1Ed6G8/F8qjqGRzlbl2H2dzjpMg1KdwsHxOlmJ7GTeZC/nesXbeZ6c9OYnuxU c3fmBuFft/Ff8xMd0s65SXIb/gAAAABJRU5ErkJggg=="/>
             <a class="action" data-action="goto"><img title="go to that feed" src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAMBSURBVHjaYvz//z8DJQAggFjAZCsjN4Omrj+DmMVSBlY+Boa/fyCy/35D2P/+QjGQ/fMLA8PLSzMYku9mgpQABBDEAC2jXAaVeFsGaWcGBkZmBobfP0C6GRhArvvzHWoYlA8ygP90BsNEER6G/DexAAEEMUDYoJ1B3IaB4cNtBoYvLxgYvj8D2vwbqglo818Q/gdxAYcEA4OQLgMDt1IMUGcsQABBDPjPDFH46gwDg3kj0IC3DAyf7jMwvLnKwPDiPMT5IK+ADPn5kIGBVwnIBkIgAAggiAG/f0IU/PoJ8QKXGASLmwJpaQaGO9uAGr9CXPKfEagO6K3vEK8BBBDEgJ9AP397D5QA0keALuBXZGAQ1WFgkDBiYFByB1oA9M6NzUB17yAG/PwM0QMEAAHEBCZ/fYPYDjLgPdCJd/YyMBzrZ2C4uISB4cdHBgZ1H4aK77cY0n7dhWgEuebbT7BWgACCGPAdKPgbKPgTKGhRysBgU87AIGbAwHB5HQPDlQ1gJT+ANsuIaDJE/AYG9A+gC35ADAAIIIgXvn+DuAJkgKgmWKhgdwYocBh+XZvM8OvyRAZJQRUGTQlzhs8/vjJ43lnEsO3PX0agZxgAAghiwI/vEGf9+sXAsK2KgUHTi+HPv18MrtrxDH///wMG/l9gqvjP8OzjYwZdGWuGL8BAtPpxkOlrCxMjQABBXfATGg5AAx5fAAfajz+/wJofvr3N8BsY/3+AqfI3MG18Agaggawtw5ff3xhO3j/yAyCAIAZ8fsPA8PUjJD38BRlykeEHxw+GP8CoFeeTA2r+Czbs+cdHDEI8EgznHh9leHHjCMM3RgYBgACCGHDl1SIG+ZvmDHzi6pBk+5fh+8c7DAuP9zD8AnrlJ9A1iiJaDBZKbgynHx5heHrzAMPG7QxzuS78/w4QQIzw3OjOOJdBhT2RgZ3rP8M/oBhYGBj0/yFsW9EvjMoKjgxvr+xlWLaFIZ/32v9JIBUAAcRIbHZWqmN8/fcfs8j3f39ZX7X9/wMTBwgwAD5jU2E9CK0iAAAAAElFTkSuQmCC' /></a>
         </section>
         <a id="more">More...</a>
-        <fieldset id="more">
-            <legend>More</legend>
-            <input type="text" id="description" value="Your description here" />
+        <fieldset style="display: none;">
+            <legend>Less</legend>
+            <label for="description">Webpage description :</label><input type="text" id="description" value="" />
+            <hr>
+            <h2>Server on which send feed entries :</h2>
+            <ul>
+                <li><input type="radio" name="server" id="defaultServer"><label for="defaultServer">Default : https://rsstodolist.appspot.com/</label></li>
+                <li><input type="radio" name="server" id="customServer"><label for="customServer">Custom :</label><input type="url" value="https://"></li>
         </fieldset>
-        <section id="notification"></section>
     </body>
 </html>

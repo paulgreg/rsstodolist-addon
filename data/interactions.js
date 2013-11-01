@@ -1,11 +1,20 @@
+var $feed = document.querySelector('#feed');
+var $desc = document.querySelector("#description");
+var $more = document.querySelector('#more');
+var $less = document.querySelector('legend');
+var $detail = document.querySelector('fieldset');
+var $defaultServer = document.querySelector('#defaultServer');
+var $customServer = document.querySelector('#customServer');
+var $url = document.querySelector('input[type=url]');
+
 self.on('message', function(infos) {
-    if (infos) {
-        if (infos.description) {
-            document.querySelector("#description").value = infos.description;
-        }
-        if (infos.feed) {
-            document.querySelector("#feed").value = infos.feed;
-        }
+    $desc.value = infos && infos.description ? infos.description : $desc.value;
+    $feed.value = infos && infos.feed ? infos.feed : $feed.value;
+    if (infos && infos.customServer) {
+        $customServer.setAttribute('checked', 'checked');
+        $url.value = infos.customServer;
+    } else {
+        $defaultServer.setAttribute('checked', 'checked');
     }
 });
 
@@ -15,23 +24,41 @@ var init = function() {
             document.querySelector("input[data-action=add]").click();
         }
     };
+    $feed.addEventListener('keyup', onKeyUp, false);
 
-    var postActions = function () {
-        console.debug('postActions', this.getAttribute('data-action'));
+    var onActionClick = function () {
         self.postMessage({
             'action': this.getAttribute("data-action"), 
-            'description': document.querySelector("#description").value, 
-            'feed': document.querySelector("#feed").value
+            'description': $desc.value, 
+            'feed': $feed.value,
+            'customServer': ($customServer.checked && $url.value.length > 7) ? $url.value : undefined
         });
     };
-
-    document.querySelector("#feed").addEventListener('keyup', onKeyUp, false);
-    var actions = document.querySelectorAll(".action");
+    var actions = document.querySelectorAll('.action');
     for(var i = 0; i < actions.length; i++) {
-        actions[i].addEventListener('click', postActions, false);
+        actions[i].addEventListener('click', onActionClick, false);
     }
+
+    var onMoreClick = function() {
+        if ($detail.style.display === 'none') {
+            $more.style.display = 'none';
+            $detail.style.display = 'block';
+            self.postMessage({'action': 'expand'});
+        } else {
+            $more.style.display = 'block';
+            $detail.style.display = 'none';
+            self.postMessage({'action': 'collapse'});
+        }
+    };
+    $more.addEventListener('click', onMoreClick, false);
+    $less.addEventListener('click', onMoreClick, false);
+
+    var onUrlChange = function() {
+        $customServer.checked = true;
+    };
+    $url.addEventListener('focus', onUrlChange, false);
 };
 
-self.postMessage("ready");
+self.postMessage({'action': 'ready'});
 init();
 
