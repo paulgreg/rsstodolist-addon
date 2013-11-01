@@ -7,12 +7,17 @@ var $defaultServer = document.querySelector('#defaultServer');
 var $customServer = document.querySelector('#customServer');
 var $url = document.querySelector('input[type=url]');
 
-self.on('message', function(infos) {
-    $desc.value = infos && infos.description ? infos.description : $desc.value;
-    $feed.value = infos && infos.feed ? infos.feed : $feed.value;
-    if (infos && infos.customServer) {
+self.on('message', function(message) {
+    console.log('messages', message);
+    if (message.feed) {
+        $feed.value = message.feed;
+    }
+    if (message.description) {
+        $desc.value = message.description;
+    }
+    if (message.customServer) {
         $customServer.setAttribute('checked', 'checked');
-        $url.value = infos.customServer;
+        $url.value = message.customServer;
     } else {
         $defaultServer.setAttribute('checked', 'checked');
     }
