@@ -17,9 +17,11 @@ self.on('message', function(message) {
     }
     if (message.customServer) {
         $customServer.setAttribute('checked', 'checked');
-        $url.value = message.customServer;
     } else {
         $defaultServer.setAttribute('checked', 'checked');
+    }
+    if (message.customUrl) {
+        $url.value = message.customUrl;
     }
 });
 
@@ -36,7 +38,8 @@ var init = function() {
             'action': this.getAttribute("data-action"), 
             'description': $desc.value, 
             'feed': $feed.value,
-            'customServer': ($customServer.checked && $url.value.length > 7) ? $url.value : undefined
+            'customServer': ($customServer.checked) ? true : false,
+            'customUrl': ($url.value.length > 0) ? $url.value : undefined
         });
     };
     var actions = document.querySelectorAll('.action');
