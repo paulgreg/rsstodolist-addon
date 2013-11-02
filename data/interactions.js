@@ -1,4 +1,5 @@
 var $feed = document.querySelector('#feed');
+var $title = document.querySelector("#title");
 var $desc = document.querySelector("#description");
 var $more = document.querySelector('#more');
 var $less = document.querySelector('legend');
@@ -9,18 +10,21 @@ var $url = document.querySelector('input[type=url]');
 
 self.on('message', function(message) {
     console.log('messages', message);
-    if (message.feed) {
+    if (message.feed !== undefined) {
         $feed.value = message.feed;
     }
-    if (message.description) {
+    if (message.title !== undefined) {
+        $title.value = message.title;
+    }
+    if (message.description !== undefined) {
         $desc.value = message.description;
     }
-    if (message.customServer) {
+    if (message.customServer === true) {
         $customServer.setAttribute('checked', 'checked');
     } else {
         $defaultServer.setAttribute('checked', 'checked');
     }
-    if (message.customUrl) {
+    if (message.customUrl !== undefined) {
         $url.value = message.customUrl;
     }
 });
@@ -36,6 +40,7 @@ var init = function() {
     var onActionClick = function () {
         self.postMessage({
             'action': this.getAttribute("data-action"), 
+            'title': $title.value, 
             'description': $desc.value, 
             'feed': $feed.value,
             'customServer': ($customServer.checked) ? true : false,
