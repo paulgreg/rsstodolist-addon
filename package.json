@@ -1,9 +1,10 @@
 {
-    "description": "Send links to rsstodolist - https://rsstodolist.appspot.com/", 
-    "license": "GPL v3", 
-    "author": "Gr\u00e9gory Paul, Aur\u00e9lien Thieriot", 
-    "version": "0.9", 
-    "fullName": "rsstodolist addon", 
-    "id": "jid0-fsmvHJm6vogjlOsg61W1N560CwA", 
-    "name": "rsstodolist"
+    "description": "Send links to rsstodolist - https://rsstodolist.appspot.com/",
+    "license": "GPL v3",
+    "author": "Gr\u00e9gory Paul, Aur\u00e9lien Thieriot",
+    "version": "0.10",
+    "fullName": "rsstodolist addon",
+    "id": "jid0-fsmvHJm6vogjlOsg61W1N560CwA",
+    "name": "rsstodolist",
+    "icon": "data/icon.png"
 }
