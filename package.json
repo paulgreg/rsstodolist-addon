@@ -6,5 +6,6 @@
     "fullName": "rsstodolist addon",
     "id": "jid0-fsmvHJm6vogjlOsg61W1N560CwA",
     "name": "rsstodolist",
-    "icon": "data/icon.png"
+    "icon": "data/icon.png",
+    "permissions": { "private-browsing": true }
 }
