@@ -1,7 +1,7 @@
 {
-    "name": "rsstodolist addon",
+    "name": "rsstodolist-addon",
     "id": "jid0-fsmvHJm6vogjlOsg61W1N560CwA@jetpack",
-    "version": "0.12",
+    "version": "0.12.0",
     "description": "Send links to rsstodolist - https://rsstodolist.appspot.com/",
     "license": "GPL v3",
     "author": "Grégory Paul, Aurélien Thieriot",
