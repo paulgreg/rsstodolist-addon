@@ -1,6 +1,6 @@
 <html>
     <style>
-        body                        { overflow-x: hidden; overflow-y: hidden; font-family: sans-serif; font-size: 9pt; background-color: transparent; color: black; }
+        body                        { overflow-x: hidden; overflow-y: hidden; font-family: sans-serif; font-size: 9pt; background-color: transparent; color: black; width: 360px; }
         label                       { margin-right: 5px; font-weight: bold; }
         input#feed                  { width: 100px; }
         input#description,
@@ -20,9 +20,9 @@
     <body>
         <section>
             <label for="feed">Add current page to feed :</label><input type="text" id="feed" value="somename" />
-            <input type="image" class="action" data-action="add" data-done="added" data-doing="adding" title="Add" src="add.png" width="16" height="16" />
-            <input type="image" class="action" data-action="del" data-done="deleted" data-doing="deleting" alt="Delete" src="del.png" width="16" height="16" />
-            <a class="action" data-action="goto"><img title="go to that feed" src="go.png" width="16" height="16" /></a>
+            <input type="image" id="add" title="Add"    src="add.png" width="16" height="16" />
+            <input type="image" id="del" title="Delete" src="del.png" width="16" height="16" />
+            <a id="goto"><img title="go to that feed"   src="go.png" width="16" height="16" /></a>
         </section>
         <a id="more">More...</a>
         <fieldset style="display: none;">
@@ -32,8 +32,9 @@
             <hr>
             <h2>Server on which send feed entries :</h2>
             <ul>
-                <li><input type="radio" name="server" id="defaultServer"><label for="defaultServer">Default : https://rsstodolist.appspot.com/</label></li>
-                <li><input type="radio" name="server" id="customServer"><label for="customServer">Custom :</label><input type="url" value="https://"></li>
+                <li><input type="radio" name="server" id="defaultServer" checked><label for="defaultServer">Default : https://rsstodolist.appspot.com/</label></li>
+                <li><input type="radio" name="server" id="customServer"><label for="customServer">Custom :</label><input type="url" value=""></li>
         </fieldset>
+        <script src="index.js"></script>
     </body>
 </html>

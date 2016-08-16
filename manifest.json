@@ -1,0 +1,22 @@
+{
+  "manifest_version": 2,
+  "name": "rsstodolist",
+  "version": "0.13.0",
+  "description": "Send links to rsstodolist - https://rsstodolist.appspot.com/",
+  "homepage_url": "https://github.com/paulgreg/rsstodolist-firefox",
+  "icons": {
+    "48": "rss.png",
+    "96": "rss.png"
+  },
+  "permissions": [
+    "activeTab",
+    "notifications",
+    "storage"
+  ],
+  "browser_action": {
+    "default_icon": "rss.png",
+    "default_title": "rsstodolist",
+    "default_popup": "popup.html"
+  },
+  "web_accessible_resources": []
+}
