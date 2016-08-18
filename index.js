@@ -46,6 +46,7 @@ $goto.addEventListener('click', () => {
         url: getServer() + '?name=' + encodeURIComponent($feed.value)
     });
     save();
+    window.close();
 }, false);
 
 function notify(status, msg) {
@@ -75,6 +76,7 @@ $add.addEventListener('click', () => {
         req.send(null);
         notify(req.status === 200, url);
         save();
+        window.close();
     });
 }, false);
 
@@ -93,6 +95,7 @@ $del.addEventListener('click', () => {
         req.send(null);
         notify(req.status === 200, url);
         save();
+        window.close();
     });
 }, false);
 
