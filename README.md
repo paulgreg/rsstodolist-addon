@@ -6,6 +6,8 @@ You can deploy the server code on your own server (https://github.com/paulgreg/r
 
 This is the rsstodolist add-on for Firefox, allowing to add URL to a RSS feed, available on the [Mozilla Add-on repository](https://addons.mozilla.org/fr/firefox/addon/rss-todolist-addon/).
 
+It uses the [Web Extension API](https://developer.mozilla.org/en-US/Add-ons/WebExtensions) which should make it easier to port it to Google Chrome.
+
 Attribution
 --------------
 
