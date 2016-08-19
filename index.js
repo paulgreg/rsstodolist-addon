@@ -53,9 +53,25 @@ function notify(status, msg) {
     browser.notifications.create("rsstodolist-notification", {
         type: "basic",
         iconUrl: status ? "imgs/ok.png" : "imgs/error.png",
-        title: "rsstodolist " + (status ? "ok" : "error"),
+        title: "rsstodolist : " + (status ? "success" : "error"),
         message: msg
     });
+}
+
+function send (url) {
+    var req = new XMLHttpRequest();
+    req.open('GET', url, true);
+    req.onreadystatechange = () => {
+        if (req.readyState == 4) {
+            var success = req.status === 200;
+            notify(success, url);
+            if (success) {
+                save();
+                window.close();
+            }
+        }
+    };
+    req.send(null);
 }
 
 $add.addEventListener('click', () => {
@@ -71,12 +87,7 @@ $add.addEventListener('click', () => {
             "&url=",
             encodeURIComponent(tabs[0].url)
         ].join("");
-        var req = new XMLHttpRequest();
-        req.open('GET', url, false);
-        req.send(null);
-        notify(req.status === 200, url);
-        save();
-        window.close();
+        send(url);
     });
 }, false);
 
@@ -90,15 +101,13 @@ $del.addEventListener('click', () => {
             "&url=",
             encodeURIComponent(tabs[0].url)
         ].join("");
-        var req = new XMLHttpRequest();
-        req.open('GET', url, false);
-        req.send(null);
-        notify(req.status === 200, url);
-        save();
-        window.close();
+        send(url);
     });
 }, false);
 
+$customUrl.addEventListener('focus', () => {
+    $customServer.checked = true;
+}, false);
 
 $less.addEventListener('click', () => {
     $more.style.display = 'block';
