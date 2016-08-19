@@ -52,7 +52,7 @@ $goto.addEventListener('click', () => {
 function notify(status, msg) {
     browser.notifications.create("rsstodolist-notification", {
         type: "basic",
-        iconUrl: status ? "ok.png" : "error.png",
+        iconUrl: status ? "imgs/ok.png" : "imgs/error.png",
         title: "rsstodolist " + (status ? "ok" : "error"),
         message: msg
     });

@@ -5,8 +5,7 @@
   "description": "Send links to rsstodolist - https://rsstodolist.appspot.com/",
   "homepage_url": "https://github.com/paulgreg/rsstodolist-firefox",
   "icons": {
-    "48": "rss.png",
-    "96": "rss.png"
+    "96": "imgs/rss.png"
   },
   "permissions": [
     "activeTab",
@@ -14,7 +13,7 @@
     "storage"
   ],
   "browser_action": {
-    "default_icon": "rss.png",
+    "default_icon": "imgs/rss.png",
     "default_title": "rsstodolist",
     "default_popup": "index.html"
   },
