@@ -35,14 +35,16 @@ function save () {
     });
 }
 function load (data) {
-    $feed.value = data.prefs.feed || "somename";
-    $customUrl.value = data.prefs.customUrl || "https://";
-    $customServer.checked = data.prefs.customServer;
-    (data.prefs.more) && openMore();
+    if (data && data.prefs) {
+        $feed.value = data.prefs.feed || "somename";
+        $customUrl.value = data.prefs.customUrl || "https://";
+        $customServer.checked = data.prefs.customServer;
+        (data.prefs.more) && openMore();
+    }
 }
 
 $goto.addEventListener('click', () => {
-    browser.tabs.create({
+    chrome.tabs.create({
         url: getServer() + '?name=' + encodeURIComponent($feed.value)
     });
     save();
@@ -50,10 +52,10 @@ $goto.addEventListener('click', () => {
 }, false);
 
 function notify(status, msg) {
-    browser.notifications.create("rsstodolist-notification", {
+    chrome.notifications.create("rsstodolist-notification", {
         type: "basic",
-        iconUrl: status ? "imgs/ok.png" : "imgs/error.png",
         title: "rsstodolist : " + (status ? "success" : "error"),
+        iconUrl: status ? "imgs/ok.png" : "imgs/error.png",
         message: msg
     });
 }
