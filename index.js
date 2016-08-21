@@ -123,5 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
         $title.value = tabs[0].title || "";
     });
+    $feed.select();
 });
 
