@@ -60,13 +60,14 @@ function notify(status, msg) {
     });
 }
 
-function send (url) {
+function send (url, server) {
     var req = new XMLHttpRequest();
     req.open('GET', url, true);
     req.onreadystatechange = () => {
         if (req.readyState == 4) {
             var success = req.status === 200;
-            notify(success, url);
+            var msg = success ? "Feed " + server + " updated" : "Error when updating " + server
+            notify(success, msg);
             if (success) {
                 save();
                 window.close();
@@ -89,7 +90,7 @@ $add.addEventListener('click', () => {
             "&url=",
             encodeURIComponent(tabs[0].url)
         ].join("");
-        send(url);
+        send(url, getServer() + "?n=" + encodeURIComponent($feed.value));
     });
 }, false);
 
@@ -103,7 +104,7 @@ $del.addEventListener('click', () => {
             "&url=",
             encodeURIComponent(tabs[0].url)
         ].join("");
-        send(url);
+        send(url, getServer() + "?n=" + encodeURIComponent($feed.value));
     });
 }, false);
 
