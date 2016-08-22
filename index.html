@@ -1,22 +1,25 @@
 <html>
-    <style>
-        body                        { overflow-x: hidden; overflow-y: hidden; font-family: sans-serif; font-size: 9pt; background-color: transparent; color: black; width: 360px; }
-        label                       { margin-right: 5px; font-weight: bold; }
-        input#feed                  { width: 100px; }
-        input#description,
-        input#title                 { width: 235px; }
-        input[type=image]           { border: 0; }
-        input[type=text],
-        input[type=url]             { border: 1px solid grey; background-color: #E3E9EF; margin-bottom: 2px; }
-        input[type=url]             { width: 240px;}
-        a, #more, legend            { cursor: pointer; }
-        #more,legend                { text-decoration: underline; }
-        h2                          { font-size: 12px; font-weight: normal; margin: 0 0; }
-        fieldset ul                 { padding: 0; margin: 0; }
-        fieldset li                 { display: block; }
-        hr                          { border: 1px solid #CCC; }
-        .commonlbl                  { width: 90px; display: inline-block; }
-    </style>
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            body                        { overflow-x: hidden; overflow-y: hidden; font-family: sans-serif; font-size: 9pt; background-color: transparent; color: black; width: 360px; }
+            label                       { margin-right: 5px; font-weight: bold; }
+            input#feed                  { width: 100px; }
+            input#description,
+            input#title                 { width: 235px; }
+            input[type=image]           { border: 0; }
+            input[type=text],
+            input[type=url]             { border: 1px solid grey; background-color: #E3E9EF; margin-bottom: 2px; }
+            input[type=url]             { width: 240px;}
+            a, #more, legend            { cursor: pointer; }
+            #more,legend                { text-decoration: underline; }
+            h2                          { font-size: 12px; font-weight: normal; margin: 0 0; }
+            fieldset ul                 { padding: 0; margin: 0; }
+            fieldset li                 { display: block; }
+            hr                          { border: 1px solid #CCC; }
+            .commonlbl                  { width: 90px; display: inline-block; }
+        </style>
+    </head>
     <body>
         <section>
             <label for="feed">Add current page to feed :</label><input type="text" id="feed" value="somename" />
