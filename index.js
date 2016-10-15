@@ -121,9 +121,11 @@ $less.addEventListener('click', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     chrome.storage.local.get('prefs', load);
-    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-        $title.value = tabs[0].title || "";
-    });
+    setTimeout(() => {
+        chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+            $title.value = tabs[0].title || "";
+        });
+    }, 50)
     $feed.select();
 });
 
