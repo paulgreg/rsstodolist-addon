@@ -1,0 +1,26 @@
+{
+  "name": "rsstodolist-addon",
+  "version": "1.0.0",
+  "description": "A Firefox/Chrome addon to send links to rsstodolist service",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paulgreg/rsstodolist-addon.git"
+  },
+  "keywords": [
+    "firefox",
+    "chrome",
+    "addon"
+  ],
+  "author": "Grégory Paul",
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/paulgreg/rsstodolist-addon/issues"
+  },
+  "homepage": "https://github.com/paulgreg/rsstodolist-addon#readme"
+}
