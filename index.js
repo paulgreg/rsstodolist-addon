@@ -12,7 +12,7 @@ var $customUrl     = document.querySelector('input[type=url]');
 var more           = false;
 
 function getServer () {
-    return $customServer.checked ? $customUrl.value : "https://rsstodolist.appspot.com/";
+    return $customServer.checked ? $customUrl.value : browser.extension.getBackgroundPage().getDefaultServer();
 }
 
 function openMore () {
@@ -33,10 +33,11 @@ function save () {
             'more': more
         }
     });
+    browser.extension.getBackgroundPage().updateValues($feed.value, $customServer.checked ? $customUrl.value : browser.extension.getBackgroundPage().getDefaultServer());
 }
 function load (data) {
     if (data && data.prefs) {
-        $feed.value = data.prefs.feed || "somename";
+        $feed.value = data.prefs.feed || browser.extension.getBackgroundPage().DEFAULT_FEED;
         $customUrl.value = data.prefs.customUrl || "https://";
         $customServer.checked = data.prefs.customServer;
         (data.prefs.more) && openMore();
@@ -51,60 +52,33 @@ $goto.addEventListener('click', () => {
     window.close();
 }, false);
 
-function notify(status, msg) {
-    chrome.notifications.create("rsstodolist-notification", {
-        type: "basic",
-        title: "rsstodolist : " + (status ? "success" : "error"),
-        iconUrl: status ? "imgs/ok.png" : "imgs/error.png",
-        message: msg
-    });
-}
-
-function send (url, server) {
-    var req = new XMLHttpRequest();
-    req.open('GET', url, true);
-    req.onreadystatechange = () => {
-        if (req.readyState == 4) {
-            var success = req.status === 200;
-            var msg = success ? "Feed " + server + " updated" : "Error when updating " + server
-            notify(success, msg);
-            if (success) {
-                save();
-                window.close();
-            }
-        }
-    };
-    req.send(null);
-}
-
 $add.addEventListener('click', () => {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-        var url = [
-            getServer(),
-            "add",
-            "?name=",
-            encodeURIComponent($feed.value) ,
-            "&title=",
-            encodeURIComponent($title.value || "") ,
+        var url = [ getServer(), "add",
+            "?name=", encodeURIComponent($feed.value) ,
+            "&title=", encodeURIComponent($title.value || "") ,
             "&description="+ encodeURIComponent($desc.value || "") ,
-            "&url=",
-            encodeURIComponent(tabs[0].url)
+            "&url=", encodeURIComponent(tabs[0].url)
         ].join("");
-        send(url, getServer() + "?n=" + encodeURIComponent($feed.value));
+        browser.extension.getBackgroundPage().send(url, getServer() + "?n=" + encodeURIComponent($feed.value))
+        .then(() => {
+            save();
+            window.close();
+        });
     });
 }, false);
 
 $del.addEventListener('click', () => {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-        var url = [
-            getServer(),
-            "del",
-            "?name=",
-            encodeURIComponent($feed.value) ,
-            "&url=",
-            encodeURIComponent(tabs[0].url)
+        var url = [ getServer(), "del",
+            "?name=", encodeURIComponent($feed.value) ,
+            "&url=", encodeURIComponent(tabs[0].url)
         ].join("");
-        send(url, getServer() + "?n=" + encodeURIComponent($feed.value));
+        browser.extension.getBackgroundPage().send(url, getServer() + "?n=" + encodeURIComponent($feed.value))
+        .then(() => {
+            save();
+            window.close();
+        });
     });
 }, false);
 
