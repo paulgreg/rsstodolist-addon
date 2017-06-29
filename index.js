@@ -33,7 +33,7 @@ function save () {
             'more': more
         }
     });
-    browser.extension.getBackgroundPage().updateValues($feed.value, $customServer.checked ? $customUrl.value : browser.extension.getBackgroundPage().getDefaultServer());
+    browser.extension.getBackgroundPage().update($feed.value, getServer());
 }
 function load (data) {
     if (data && data.prefs) {

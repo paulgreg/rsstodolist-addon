@@ -36,7 +36,7 @@ browser.contextMenus.onClicked.addListener(function (info, tab) {
     send(url, server + "?n=" + encodeURIComponent(feed));
 });
 
-function updateValues(f, s) {
+function update(f, s) {
     feed = f || DEFAULT_FEED;
     server = s || DEFAULT_URL;
 
@@ -45,23 +45,22 @@ function updateValues(f, s) {
     });
 }
 
-function notify(status, msg) {
+function notify(success, server) {
     chrome.notifications.create("rsstodolist-notification", {
         type: "basic",
-        title: "rsstodolist : " + (status ? "success" : "error"),
-        iconUrl: status ? "imgs/ok.png" : "imgs/error.png",
-        message: msg
+        title: "rsstodolist : " + (success ? "success" : "error"),
+        iconUrl: success ? "imgs/ok.png" : "imgs/error.png",
+        message: success ? "Feed " + server + " updated" : "Error when updating " + server
     });
 }
 
-function send (url, server) {
+function send (url, msg) {
     return new Promise((resolve) => {
         var req = new XMLHttpRequest();
         req.open('GET', url, true);
         req.onreadystatechange = () => {
             if (req.readyState == 4) {
                 var success = req.status === 200;
-                var msg = success ? "Feed " + server + " updated" : "Error when updating " + server
                 notify(success, msg);
                 if (success) {
                     resolve();
