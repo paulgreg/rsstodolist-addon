@@ -95,12 +95,9 @@ $less.addEventListener('click', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     chrome.storage.local.get('prefs', load);
-    // timeout to mitigate that bug: https://bugzilla.mozilla.org/show_bug.cgi?id=1310019
-    setTimeout(() => {
-        chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-            $title.value = tabs[0].title || "";
-        });
-    }, 50)
+    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+        $title.value = tabs[0].title || "";
+    });
     $feed.select();
 });
 
