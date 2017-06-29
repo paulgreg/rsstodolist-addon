@@ -25,7 +25,6 @@ function initRightClick (data) {
       contexts: ["link"]
     });
 }
-
 chrome.storage.local.get('prefs', initRightClick);
 
 browser.contextMenus.onClicked.addListener(function (info, tab) {
@@ -70,4 +69,3 @@ function send (url, msg) {
         req.send(null);
     });
 }
-
