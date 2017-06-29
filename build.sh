@@ -1,4 +1,4 @@
 if [ -f rsstodolist.zip ]; then
     rm rsstodolist.zip
 fi;
-zip --exclude build.sh -r rsstodolist.zip *
+zip -r rsstodolist.zip manifest.json *.js *.html imgs
