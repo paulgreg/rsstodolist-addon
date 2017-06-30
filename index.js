@@ -12,7 +12,7 @@ var $customUrl     = document.querySelector('input[type=url]');
 var more           = false;
 
 function getServer () {
-    return $customServer.checked ? $customUrl.value : browser.extension.getBackgroundPage().getDefaultServer();
+    return $customServer.checked ? $customUrl.value : chrome.extension.getBackgroundPage().getDefaultServer();
 }
 
 function openMore () {
@@ -33,11 +33,11 @@ function save () {
             'more': more
         }
     });
-    browser.extension.getBackgroundPage().update($feed.value, getServer());
+    chrome.extension.getBackgroundPage().update($feed.value, getServer());
 }
 function load (data) {
     if (data && data.prefs) {
-        $feed.value = data.prefs.feed || browser.extension.getBackgroundPage().DEFAULT_FEED;
+        $feed.value = data.prefs.feed || chrome.extension.getBackgroundPage().DEFAULT_FEED;
         $customUrl.value = data.prefs.customUrl || "https://";
         $customServer.checked = data.prefs.customServer;
         (data.prefs.more) && openMore();
@@ -60,7 +60,7 @@ $add.addEventListener('click', () => {
             "&description="+ encodeURIComponent($desc.value || "") ,
             "&url=", encodeURIComponent(tabs[0].url)
         ].join("");
-        browser.extension.getBackgroundPage().send(url, getServer() + "?n=" + encodeURIComponent($feed.value))
+        chrome.extension.getBackgroundPage().send(url, getServer() + "?n=" + encodeURIComponent($feed.value))
         .then(() => {
             save();
             window.close();
@@ -74,7 +74,7 @@ $del.addEventListener('click', () => {
             "?name=", encodeURIComponent($feed.value) ,
             "&url=", encodeURIComponent(tabs[0].url)
         ].join("");
-        browser.extension.getBackgroundPage().send(url, getServer() + "?n=" + encodeURIComponent($feed.value))
+        chrome.extension.getBackgroundPage().send(url, getServer() + "?n=" + encodeURIComponent($feed.value))
         .then(() => {
             save();
             window.close();

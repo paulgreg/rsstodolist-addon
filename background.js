@@ -19,7 +19,7 @@ function initRightClick (data) {
         server = data.prefs.customUrl;
     }
 
-    browser.contextMenus.create({
+    chrome.contextMenus.create({
       id: "rsstodolist-link",
       title: `Send link to ${server}?n=${feed}`,
       contexts: ["link"]
@@ -27,7 +27,7 @@ function initRightClick (data) {
 }
 chrome.storage.local.get('prefs', initRightClick);
 
-browser.contextMenus.onClicked.addListener(function (info, tab) {
+chrome.contextMenus.onClicked.addListener(function (info, tab) {
     var url = [ server, "add",
         "?name=", encodeURIComponent(feed),
         "&url=", info.linkUrl
@@ -39,7 +39,7 @@ function update(f, s) {
     feed = f || DEFAULT_FEED;
     server = s || DEFAULT_URL;
 
-    browser.contextMenus.update("rsstodolist-link", {
+    chrome.contextMenus.update("rsstodolist-link", {
       title: `Send link to ${server}?n=${feed}`
     });
 }
