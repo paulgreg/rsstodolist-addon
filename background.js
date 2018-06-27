@@ -1,6 +1,9 @@
 const DEFAULT_SERVER = "https://rsstodolist.appspot.com/";
 const DEFAULT_FEED = "somename";
 
+const MENU_ADD = 'rsstodolist-add'
+const MENU_DEL = 'rsstodolist-del'
+
 var feed = DEFAULT_FEED;
 var server = DEFAULT_SERVER;
 
@@ -20,29 +23,29 @@ function initRightClick (data) {
     }
 
     chrome.contextMenus.create({
-      id: "rsstodolist-link",
-      title: `Send link to ${server}?n=${feed}`,
+      id: MENU_ADD,
+      title: `Add link`,
+      contexts: ["link"]
+    });
+    chrome.contextMenus.create({
+      id: MENU_DEL,
+      title: `Remove link`,
       contexts: ["link"]
     });
 }
 chrome.storage.local.get('prefs', initRightClick);
 
 chrome.contextMenus.onClicked.addListener(function (info, tab) {
-    var url = [ server, "add",
-        "?name=", encodeURIComponent(feed),
-        "&url=", info.linkUrl
+    var url = [
+        server,
+        (info.menuItemId === MENU_ADD ? 'add' : 'del'),
+        "?name=",
+        encodeURIComponent(feed),
+        "&url=",
+        info.linkUrl
     ].join("");
     send(url, server + "?n=" + encodeURIComponent(feed));
 });
-
-function update(f, s) {
-    feed = f || DEFAULT_FEED;
-    server = s || DEFAULT_URL;
-
-    chrome.contextMenus.update("rsstodolist-link", {
-      title: `Send link to ${server}?n=${feed}`
-    });
-}
 
 function notify(success, server) {
     chrome.notifications.create("rsstodolist-notification", {

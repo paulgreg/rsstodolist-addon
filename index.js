@@ -33,7 +33,6 @@ function save () {
             'more': more
         }
     });
-    chrome.extension.getBackgroundPage().update($feed.value, getServer());
 }
 function load (data) {
     if (data && data.prefs) {
