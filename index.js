@@ -52,13 +52,19 @@ $goto.addEventListener('click', () => {
     window.close();
 }, false);
 
-$add.addEventListener('click', () => {
+function doAction(add) {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-        var url = [ getServer(), "add",
-            "?name=", encodeURIComponent($feed.value) ,
-            "&title=", encodeURIComponent($title.value || "") ,
-            "&description="+ encodeURIComponent($desc.value || "") ,
-            "&url=", encodeURIComponent(tabs[0].url)
+        var url = [
+            getServer(),
+            (add ? "add" : "del"),
+            "?name=",
+            encodeURIComponent($feed.value) ,
+            "&title=",
+            encodeURIComponent($title.value || "") ,
+            "&description=",
+            encodeURIComponent($desc.value || ""),
+            "&url=",
+            encodeURIComponent(tabs[0].url)
         ].join("");
         chrome.extension.getBackgroundPage().send(url, getServer() + "?n=" + encodeURIComponent($feed.value))
         .then(() => {
@@ -66,25 +72,12 @@ $add.addEventListener('click', () => {
             window.close();
         });
     });
-}, false);
+}
 
-$del.addEventListener('click', () => {
-    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-        var url = [ getServer(), "del",
-            "?name=", encodeURIComponent($feed.value) ,
-            "&url=", encodeURIComponent(tabs[0].url)
-        ].join("");
-        chrome.extension.getBackgroundPage().send(url, getServer() + "?n=" + encodeURIComponent($feed.value))
-        .then(() => {
-            save();
-            window.close();
-        });
-    });
-}, false);
+$add.addEventListener('click', () => { doAction(true) }, false);
+$del.addEventListener('click', () => { doAction(false) }, false);
 
-$customUrl.addEventListener('focus', () => {
-    $customServer.checked = true;
-}, false);
+$customUrl.addEventListener('focus', () => { $customServer.checked = true; }, false);
 
 $less.addEventListener('click', () => {
     $more.style.display = 'block';
