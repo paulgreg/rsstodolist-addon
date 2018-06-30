@@ -9,15 +9,16 @@
             input#title                 { width: 235px; }
             input[type=image]           { border: 0; }
             input[type=text],
-            input[type=url]             { border: 1px solid grey; background-color: #E3E9EF; margin-bottom: 2px; }
-            input[type=url]             { width: 240px;}
+            input[type=url]             { border: 1px solid grey; background-color: #E3E9EF; margin-bottom: 2px; width: 270px; }
             a, #more, legend            { cursor: pointer; }
             #more,legend                { text-decoration: underline; }
             h2                          { font-size: 12px; font-weight: normal; margin: 0 0; }
-            fieldset ul                 { padding: 0; margin: 0; }
-            fieldset li                 { display: block; }
             hr                          { border: 1px solid #CCC; }
             .commonlbl                  { width: 90px; display: inline-block; }
+
+            fieldset                    { display: none; }
+            body.more #more             { display: none; }
+            body.more fieldset          { display: block; }
         </style>
     </head>
     <body>
@@ -28,15 +29,12 @@
             <a id="goto"><img title="go to that feed"   src="imgs/go.png" width="16" height="16" /></a>
         </section>
         <a id="more">More...</a>
-        <fieldset style="display: none;">
+        <fieldset>
             <legend>Less</legend>
             <label class="commonlbl" for="title">Title :</label><input type="text" id="title" value="" />
             <label class="commonlbl" for="description">Description :</label><input type="text" id="description" value="" />
             <hr>
-            <h2>Server on which send feed entries :</h2>
-            <ul>
-                <li><input type="radio" name="server" id="defaultServer" checked><label for="defaultServer">Default : https://rsstodolist.appspot.com/</label></li>
-                <li><input type="radio" name="server" id="customServer"><label for="customServer">Custom :</label><input type="url" value="https://"></li>
+            <label for="server">Server :</label><input type="url" id="server" value="https://rsstodolist.appspot.com/" placeholder="https://rsstodolist.appspot.com/">
         </fieldset>
         <script src="index.js"></script>
     </body>

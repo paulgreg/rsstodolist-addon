@@ -1,95 +1,65 @@
-var $add           = document.querySelector('#add');
-var $del           = document.querySelector('#del');
-var $goto          = document.querySelector('#goto');
-var $feed          = document.querySelector('#feed');
-var $title         = document.querySelector("#title");
-var $desc          = document.querySelector("#description");
-var $more          = document.querySelector('#more');
-var $less          = document.querySelector('legend');
-var $detail        = document.querySelector('fieldset');
-var $customServer  = document.querySelector('#customServer');
-var $customUrl     = document.querySelector('input[type=url]');
-var more           = false;
+var body           = document.querySelector('body')
+var $add           = document.querySelector('#add')
+var $del           = document.querySelector('#del')
+var $goto          = document.querySelector('#goto')
+var $feed          = document.querySelector('#feed')
+var $title         = document.querySelector("#title")
+var $desc          = document.querySelector("#description")
+var $more          = document.querySelector('#more')
+var $less          = document.querySelector('legend')
+var $detail        = document.querySelector('fieldset')
+var $server        = document.querySelector('#server')
+let more           = false
 
-function getServer () {
-    return $customServer.checked ? $customUrl.value : chrome.extension.getBackgroundPage().getDefaultServer();
+function displayMore (shouldDisplay) {
+    more = shouldDisplay
+    body.classList[shouldDisplay ? 'add' : 'remove']('more')
+    save()
 }
 
-function openMore () {
-    $more.style.display = 'none';
-    $detail.style.display = 'block';
-    more = true;
-    save();
+$more.addEventListener('click', displayMore.bind(this, true), false)
+$less.addEventListener('click', displayMore.bind(this, false), false)
+
+function save() {
+    chrome.extension.getBackgroundPage().save($feed.value, $server.value, more)
 }
 
-$more.addEventListener('click', openMore, false);
+function setPrefs (prefs) {
+    console.log('setPrefs', prefs)
+    $feed.value = prefs.feed
+    $server.value = prefs.server
+    displayMore(prefs.more)
+}
 
-function save () {
-    chrome.storage.local.set({
-        'prefs': {
-            'feed': $feed.value,
-            'customUrl': $customUrl.value,
-            'customServer': $customServer.checked,
-            'more': more
-        }
-    });
-}
-function load (data) {
-    if (data && data.prefs) {
-        $feed.value = data.prefs.feed || chrome.extension.getBackgroundPage().DEFAULT_FEED;
-        $customUrl.value = data.prefs.customUrl || "https://";
-        $customServer.checked = data.prefs.customServer;
-        (data.prefs.more) && openMore();
-    }
-}
+document.addEventListener('DOMContentLoaded', () => {
+    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+        $title.value = tabs[0].title || ""
+    })
+
+    const prefs = chrome.extension.getBackgroundPage().getPrefs()
+    setPrefs(prefs)
+
+    $feed.select()
+})
 
 $goto.addEventListener('click', () => {
+    save()
+    window.close()
     chrome.tabs.create({
-        url: getServer() + '?name=' + encodeURIComponent($feed.value)
-    });
-    save();
-    window.close();
-}, false);
+        url: `${$server.value}?name=${encodeURIComponent($feed.value)}`
+    })
+}, false)
 
 function doAction(add) {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-        var url = [
-            getServer(),
-            (add ? "add" : "del"),
-            "?name=",
-            encodeURIComponent($feed.value) ,
-            "&title=",
-            encodeURIComponent($title.value || "") ,
-            "&description=",
-            encodeURIComponent($desc.value || ""),
-            "&url=",
-            encodeURIComponent(tabs[0].url)
-        ].join("");
-        chrome.extension.getBackgroundPage().send(url, getServer() + "?n=" + encodeURIComponent($feed.value))
-        .then(() => {
-            save();
-            window.close();
-        });
-    });
+        save()
+        window.close()
+        chrome.extension.getBackgroundPage().send($server.value, add, $feed.value, tabs[0].url, $title.value, $desc.value)
+    })
 }
 
-$add.addEventListener('click', () => { doAction(true) }, false);
-$del.addEventListener('click', () => { doAction(false) }, false);
-
-$customUrl.addEventListener('focus', () => { $customServer.checked = true; }, false);
-
-$less.addEventListener('click', () => {
-    $more.style.display = 'block';
-    $detail.style.display = 'none';
-    more = false;
-    save();
-}, false);
-
-document.addEventListener('DOMContentLoaded', () => {
-    chrome.storage.local.get('prefs', load);
-    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-        $title.value = tabs[0].title || "";
-    });
-    $feed.select();
-});
-
+$add.addEventListener('click', () => { doAction(true) }, false)
+$del.addEventListener('click', () => { doAction(false) }, false)
+$feed.addEventListener('keydown', (e) => {
+    if (e.keyCode === 13) doAction(true)
+}, false)
