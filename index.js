@@ -25,7 +25,6 @@ function save() {
 }
 
 function setPrefs (prefs) {
-    console.log('setPrefs', prefs)
     $feed.value = prefs.feed
     $server.value = prefs.server
     displayMore(prefs.more)
@@ -44,17 +43,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 $goto.addEventListener('click', () => {
     save()
-    window.close()
     chrome.tabs.create({
         url: `${$server.value}?name=${encodeURIComponent($feed.value)}`
     })
+    window.close()
 }, false)
 
 function doAction(add) {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
         save()
-        window.close()
         chrome.extension.getBackgroundPage().send($server.value, add, $feed.value, tabs[0].url, $title.value, $desc.value)
+        window.close()
     })
 }
 
