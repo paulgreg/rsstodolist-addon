@@ -16,6 +16,12 @@
         "storage",
         "contextMenus"
     ],
+    "applications": {
+        "gecko": {
+            "id": "jid0-fsmvHJm6vogjlOsg61W1N560CwA@jetpack",
+            "strict_min_version": "60.0"
+        }
+    },
     "background": {
         "scripts": ["background.js" ]
     },
