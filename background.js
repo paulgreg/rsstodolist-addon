@@ -41,21 +41,21 @@ function send(server, add, feed, url, title, description) {
         server,
         (add ? "add" : "del"),
         "?name=",
-        encodeURIComponent(feed) ,
+        encodeURIComponent(feed),
         "&url=",
         encodeURIComponent(cleanUrl(url))
     ]
     if (title) {
-        url.push([
+        url.push(
             "&title=",
             encodeURIComponent(title)
-        ])
+        )
     }
     if (description) {
-        url.push([
+        url.push(
             "&description=",
             encodeURIComponent(description)
-        ])
+        )
     }
     if (DEBUG) console.log('send', url.join(''))
 
