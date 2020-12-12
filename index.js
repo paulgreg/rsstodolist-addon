@@ -1,4 +1,5 @@
 var body           = document.querySelector('body')
+var $form          = document.querySelector('form')
 var $add           = document.querySelector('#add')
 var $del           = document.querySelector('#del')
 var $goto          = document.querySelector('#goto')
@@ -57,8 +58,6 @@ function doAction(add) {
     })
 }
 
+$form.addEventListener('submit', () => { doAction(true) }, false)
 $add.addEventListener('click', () => { doAction(true) }, false)
 $del.addEventListener('click', () => { doAction(false) }, false)
-$feed.addEventListener('keydown', (e) => {
-    if (e.keyCode === 13) doAction(true)
-}, false)
