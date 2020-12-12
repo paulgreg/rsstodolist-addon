@@ -6,7 +6,7 @@
   "dependencies": {},
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "addon": "rm -f rsstodolist.zip; zip -r rsstodolist.zip manifest.json *.js *.html imgs"
   },
   "repository": {
     "type": "git",
