@@ -50,14 +50,17 @@ $goto.addEventListener('click', () => {
     window.close()
 }, false)
 
-function doAction(add) {
+const doAction = (e, add) => {
+    e.stopPropagation()
+    e.preventDefault()
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
         save()
+        console.log('doAction', add, tabs[0].url)
         chrome.extension.getBackgroundPage().send($server.value, add, $feed.value, tabs[0].url, $title.value, $desc.value)
         window.close()
     })
 }
 
-$form.addEventListener('submit', () => { doAction(true) }, false)
-$add.addEventListener('click', () => { doAction(true) }, false)
-$del.addEventListener('click', () => { doAction(false) }, false)
+$form.addEventListener('submit', e => doAction(e, true), false)
+$add.addEventListener('click', e => doAction(e, true), false)
+$del.addEventListener('click', e => doAction(e, false), false)
