@@ -5,9 +5,9 @@
     "description": "Send links to rsstodolist - https://rsstodolist.eu/",
     "homepage_url": "https://github.com/paulgreg/rsstodolist-addon",
     "icons": {
-        "16": "imgs/rss.png",
-        "48": "imgs/rss.png",
-        "96": "imgs/rss.png",
+        "16": "imgs/rss16.png",
+        "48": "imgs/rss48.png",
+        "96": "imgs/rss96.png",
         "128": "imgs/rss.png"
     },
     "permissions": [
