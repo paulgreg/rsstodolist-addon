@@ -1,4 +1,4 @@
-const DEFAULT_SERVER = "https://rsstodolist.appspot.com/";
+const DEFAULT_SERVER = "https://rsstodolist.eu/";
 const DEFAULT_FEED = "somename";
 const DEBUG = false
 let prefs

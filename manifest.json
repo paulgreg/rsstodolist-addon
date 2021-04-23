@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
     "name": "rsstodolist",
-    "version": "1.5.3",
-    "description": "Send links to rsstodolist - https://rsstodolist.appspot.com/",
+    "version": "1.6.0",
+    "description": "Send links to rsstodolist - https://rsstodolist.eu/",
     "homepage_url": "https://github.com/paulgreg/rsstodolist-addon",
     "icons": {
         "16": "imgs/rss.png",
