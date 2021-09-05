@@ -3,10 +3,15 @@ const DEFAULT_FEED = "somename";
 const DEBUG = false
 let prefs
 
+const addEndingSlash = (s = '') => {
+    if (s.length !== 0 && !s.endsWith('/')) return `${s}/`
+    return s
+}
+
 function save (feed, server, more) {
     prefs = {
         feed: feed || DEFAULT_FEED,
-        server: server || DEFAULT_SERVER,
+        server: addEndingSlash(server) || DEFAULT_SERVER,
         more: !!more
     }
     if (DEBUG) console.log('save', prefs)
