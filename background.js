@@ -33,7 +33,7 @@ function getPrefs () {
 }
 
 function cleanUrl (url) {
-    return url.replace(/&?utm_.+?(&|$)/g, '')
+    return url.replace(/&?utm_.+?(&|$)/g, '').replace(/(\?)$/, '')
 }
 
 function send(server, add, feed, url, title, description) {
