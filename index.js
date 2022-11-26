@@ -1,31 +1,28 @@
-var body           = document.querySelector('body')
-var $form          = document.querySelector('form')
-var $add           = document.querySelector('#add')
-var $del           = document.querySelector('#del')
-var $goto          = document.querySelector('#goto')
-var $feed          = document.querySelector('#feed')
-var $title         = document.querySelector("#title")
-var $desc          = document.querySelector("#description")
-var $more          = document.querySelector('#more')
-var $less          = document.querySelector('legend')
-var $detail        = document.querySelector('fieldset')
-var $server        = document.querySelector('#server')
-let more           = false
+import { load, save, send } from './common.js'
 
-function displayMore (shouldDisplay) {
+const body           = document.querySelector('body')
+const $form          = document.querySelector('form')
+const $add           = document.querySelector('#add')
+const $del           = document.querySelector('#del')
+const $goto          = document.querySelector('#goto')
+const $feed          = document.querySelector('#feed')
+const $title         = document.querySelector("#title")
+const $desc          = document.querySelector("#description")
+const $more          = document.querySelector('#more')
+const $less          = document.querySelector('legend')
+const $server        = document.querySelector('#server')
+let   more           = false
+
+const displayMore = (shouldDisplay) => {
     more = shouldDisplay
     body.classList[shouldDisplay ? 'add' : 'remove']('more')
-    save()
+    save($feed.value, $server.value, more)
 }
 
 $more.addEventListener('click', displayMore.bind(this, true), false)
 $less.addEventListener('click', displayMore.bind(this, false), false)
 
-function save() {
-    chrome.extension.getBackgroundPage().save($feed.value, $server.value, more)
-}
-
-function setPrefs (prefs) {
+const setPrefsInUI = (prefs) => {
     $feed.value = prefs.feed
     $server.value = prefs.server
     displayMore(prefs.more)
@@ -36,14 +33,15 @@ document.addEventListener('DOMContentLoaded', () => {
         $title.value = tabs[0].title || ""
     })
 
-    const prefs = chrome.extension.getBackgroundPage().getPrefs()
-    setPrefs(prefs)
+    load(prefs => {
+        setPrefsInUI(prefs)
+    })
 
     $feed.select()
 })
 
 $goto.addEventListener('click', () => {
-    save()
+    save($feed.value, $server.value, more)
     chrome.tabs.create({
         url: `${$server.value}?name=${encodeURIComponent($feed.value)}`
     })
@@ -54,10 +52,12 @@ const doAction = (e, add) => {
     e.stopPropagation()
     e.preventDefault()
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-        save()
+        save($feed.value, $server.value, more)
         console.log('doAction', add, tabs[0].url)
-        chrome.extension.getBackgroundPage().send($server.value, add, $feed.value, tabs[0].url, $title.value, $desc.value)
-        window.close()
+        send($server.value, add, $feed.value, tabs[0].url, $title.value, $desc.value)
+        .then(() => {
+            window.close()
+        })
     })
 }
 

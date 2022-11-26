@@ -1,7 +1,7 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "rsstodolist",
-    "version": "1.6.2",
+    "version": "1.7.0",
     "description": "Send links to rsstodolist - https://rsstodolist.eu/",
     "homepage_url": "https://github.com/paulgreg/rsstodolist-addon",
     "icons": {
@@ -16,16 +16,14 @@
         "storage",
         "contextMenus"
     ],
-    "applications": {
-        "gecko": {
-            "id": "jid0-fsmvHJm6vogjlOsg61W1N560CwA@jetpack",
-            "strict_min_version": "60.0"
-        }
-    },
+    "host_permissions": [
+        "*://*/*"
+    ],
     "background": {
-        "scripts": ["background.js" ]
+        "service_worker": "background.js",
+         "type": "module"
     },
-    "browser_action": {
+    "action": {
         "default_icon": "imgs/rss.png",
         "default_title": "rsstodolist",
         "default_popup": "index.html"

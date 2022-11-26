@@ -1,7 +1,7 @@
 Description
 ===========
 
-rsstodolist is a service to build RSS feed, hosted at https://rsstodolist.eu/ *(previously at https://rsstodolist.appspot.com)*.
+rsstodolist is a service to build RSS feed, hosted at https://rsstodolist.eu/.
 
 You can deploy the server code on your own server (https://github.com/paulgreg/rsstodolist-node-server) to host your private instance, for more privacy and reliability.
 
