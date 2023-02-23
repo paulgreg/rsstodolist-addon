@@ -1,4 +1,4 @@
-import { load, save, send } from './common.js'
+import { load, save, send, throttle, fetchCount } from './common.js'
 
 const body           = document.querySelector('body')
 const $form          = document.querySelector('form')
@@ -6,6 +6,7 @@ const $add           = document.querySelector('#add')
 const $del           = document.querySelector('#del')
 const $goto          = document.querySelector('#goto')
 const $feed          = document.querySelector('#feed')
+const $count         = document.querySelector('#count')
 const $title         = document.querySelector("#title")
 const $desc          = document.querySelector("#description")
 const $more          = document.querySelector('#more')
@@ -28,17 +29,9 @@ const setPrefsInUI = (prefs) => {
     displayMore(prefs.more)
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-        $title.value = tabs[0].title || ""
-    })
-
-    load(prefs => {
-        setPrefsInUI(prefs)
-    })
-
-    $feed.select()
-})
+const resetCount = () => {
+    $count.innerText = ''
+}
 
 $goto.addEventListener('click', () => {
     save($feed.value, $server.value, more)
@@ -64,3 +57,30 @@ const doAction = (e, add) => {
 $form.addEventListener('submit', e => doAction(e, true), false)
 $add.addEventListener('click', e => doAction(e, true), false)
 $del.addEventListener('click', e => doAction(e, false), false)
+
+const doCount = () => Promise.resolve()
+    .then(() => {
+        const name = $feed.value
+        return !name.length ? '' : fetchCount($server.value, name)
+    })
+    .then(count => {
+        $count.innerText = count
+    })
+
+$feed.addEventListener('keyup', resetCount, false)
+$feed.addEventListener('keyup', throttle(doCount), false)
+
+document.addEventListener('DOMContentLoaded', () => {
+    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+        $title.value = tabs[0].title || ""
+    })
+
+    load(prefs => {
+        setPrefsInUI(prefs)
+    })
+
+    setTimeout(() => {
+        $feed.focus()
+        $feed.select()
+    }, 10)
+})

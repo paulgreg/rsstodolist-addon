@@ -2,19 +2,22 @@
     <head>
         <meta charset="UTF-8">
         <style>
-            body                        { overflow-x: hidden; overflow-y: hidden; font-family: sans-serif; font-size: 9pt; background-color: transparent; color: black; width: 360px; }
-            label                       { margin-right: 5px; font-weight: bold; }
-            input#feed                  { width: 100px; }
-            input#description,
-            input#title                 { width: 235px; }
-            input[type=image]           { border: 0; }
+            body                        { overflow-x: hidden; overflow-y: hidden; font-family: sans-serif; font-size: 12px; background-color: transparent; color: black; }
+            form                        { width: 400px; }
+            section                     { display: flex; justify-content: space-between; align-items: center; } 
+            fieldset                    { display: flex; flex-direction: column; } 
+            label                       { font-weight: bold; margin-right: 5px; white-space: pre; }
+            .item                       { display: flex; align-items: center; }
             input[type=text],
-            input[type=url]             { border: 1px solid grey; background-color: #E3E9EF; margin-bottom: 2px; width: 270px; }
+            input[type=url]             { border: 1px solid grey; background-color: #E3E9EF; margin: 2px 0; }
+            fieldset input              { flex: 1; }
+            input[type=image]           { margin-left: 4px; }
+            #feed                       { width: 110px; }
+            #count                      { flex: 1; text-align: center; font-size: 14px; margin: 0 4px 0 6px; }
             a, #more, legend            { cursor: pointer; }
             #more,legend                { text-decoration: underline; }
             h2                          { font-size: 12px; font-weight: normal; margin: 0 0; }
-            hr                          { border: 1px solid #CCC; }
-            .commonlbl                  { width: 90px; display: inline-block; }
+            hr                          { flex: 1; border: 1px solid #CCC; }
             fieldset                    { display: none; }
             body.more #more             { display: none; }
             body.more fieldset          { display: block; }
@@ -24,17 +27,18 @@
         <form>
             <section>
                 <label for="feed">Add current page to feed :</label><input type="text" id="feed" value="somename" autocomplete="on" />
-                <input type="image" id="add" title="Add"    src="imgs/add.png" width="16" height="16" />
-                <input type="image" id="del" title="Delete" src="imgs/del.png" width="16" height="16" />
-                <a id="goto"><img title="go to that feed"   src="imgs/go.png" width="16" height="16" /></a>
+                <span id="count" title="items in feed"></span>
+                <input type="image" id="add" class="button" title="Add" src="imgs/add.png" width="16" height="16" />
+                <input type="image" id="del" class="button" title="Delete" src="imgs/del.png" width="16" height="16" />
+                <input type="image" id="goto" class="button" title="go to feed"   src="imgs/go.png" width="16" height="16" />
             </section>
             <a id="more">More...</a>
             <fieldset>
                 <legend>Less</legend>
-                <label class="commonlbl" for="title">Title :</label><input type="text" id="title" value="" />
-                <label class="commonlbl" for="description">Description :</label><input type="text" id="description" value="" />
-                <hr>
-                <label for="server">Server :</label><input type="url" id="server" value="https://rsstodolist.eu/" placeholder="https://rsstodolist.eu/">
+                <div class="item"><label for="title">Title :</label><input type="text" id="title" value="" /></div>
+                <div class="item"><label for="description">Description :</label><input type="text" id="description" value="" /></div>
+                <div class="item"><hr></div>
+                <div class="item"><label for="server">Server :</label><input type="url" id="server" value="https://rsstodolist.eu/" placeholder="https://rsstodolist.eu/"></div>
             </fieldset>
         </form>
         <script type="module" src="./index.js"></script>

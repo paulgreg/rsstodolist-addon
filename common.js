@@ -71,6 +71,17 @@ export const send = (server, add, feed, url, title, description) => {
         notify(false, `Error when updating ${feed}`) 
     })
 }
+export const fetchCount = (server, name) => {
+    const url = `${server}count?n=${name}`
+    console.log(`fetchCount - ${url}`)
+    return fetch(url)
+    .then(response => response.json())
+    .then(json => formatNumber(json?.count || 0))
+    .catch(e => {
+        console.error(e)
+        return 'N/A'
+    })
+}
 
 export const notify = (success, message) => {
     chrome.notifications.create("rsstodolist-notification", {
@@ -79,4 +90,23 @@ export const notify = (success, message) => {
         iconUrl: success ? "imgs/ok.png" : "imgs/error.png",
         message
     });
+}
+
+export const throttle = fn => {
+    let timeout
+    return e => {
+        clearTimeout(timeout)
+        timeout = setTimeout(() => fn(e), 800)
+    }
+}
+
+const MILLION = 1_000_000
+const THOUSAND = 1_000
+
+export const formatNumber = nb => {
+    if (Number.isInteger(nb)) {
+        if (nb >= MILLION) return `${(nb / MILLION).toFixed(1)}M`
+        if (nb >= THOUSAND) return `${(nb / THOUSAND).toFixed(1)}K`
+    }
+    return nb
 }
