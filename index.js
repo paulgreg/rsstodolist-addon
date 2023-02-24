@@ -1,4 +1,4 @@
-import { load, save, send, throttle, fetchCount } from './common.js'
+import { load, save, send, throttle, fetchSuggest, formatNumber, DEFAULT_SERVER } from './common.js'
 
 const body           = document.querySelector('body')
 const $form          = document.querySelector('form')
@@ -6,12 +6,12 @@ const $add           = document.querySelector('#add')
 const $del           = document.querySelector('#del')
 const $goto          = document.querySelector('#goto')
 const $feed          = document.querySelector('#feed')
-const $count         = document.querySelector('#count')
 const $title         = document.querySelector("#title")
 const $desc          = document.querySelector("#description")
 const $more          = document.querySelector('#more')
 const $less          = document.querySelector('legend')
 const $server        = document.querySelector('#server')
+const $datalist      = document.querySelector('datalist')
 let   more           = false
 
 const displayMore = (shouldDisplay) => {
@@ -27,10 +27,6 @@ const setPrefsInUI = (prefs) => {
     $feed.value = prefs.feed
     $server.value = prefs.server
     displayMore(prefs.more)
-}
-
-const resetCount = () => {
-    $count.innerText = ''
 }
 
 $goto.addEventListener('click', () => {
@@ -58,17 +54,25 @@ $form.addEventListener('submit', e => doAction(e, true), false)
 $add.addEventListener('click', e => doAction(e, true), false)
 $del.addEventListener('click', e => doAction(e, false), false)
 
-const doCount = () => Promise.resolve()
-    .then(() => {
-        const name = $feed.value
-        return !name.length ? '' : fetchCount($server.value, name)
-    })
-    .then(count => {
-        $count.innerText = count
-    })
-
-$feed.addEventListener('keyup', resetCount, false)
-$feed.addEventListener('keyup', throttle(doCount), false)
+const doSuggest = () => {
+    const name = $feed.value
+    if (name.length < 2) return
+    $datalist.innerHTML = ''
+    return Promise.resolve()
+        .then(() => fetchSuggest($server.value, name))
+        .then(results => {
+            if (results?.length > 0) {
+                results.filter(s => s?.name?.length)
+                    .forEach(({name, count})=> {
+                        const option = document.createElement('option')
+                        option.innerText = `${name} (${formatNumber(count)})`
+                        option.value = name
+                        $datalist.appendChild(option)
+                    })
+                    console.log($datalist)
+            }
+        })
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
@@ -77,10 +81,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     load(prefs => {
         setPrefsInUI(prefs)
+
+        if (prefs.server !== DEFAULT_SERVER) {
+            console.log('register doSuggest')
+            $feed.setAttribute('autocomplete', 'off')
+            $feed.setAttribute('list', 'suggestions')
+            $feed.addEventListener('keypress', throttle(250)(doSuggest), false)
+        }
     })
 
     setTimeout(() => {
         $feed.focus()
         $feed.select()
-    }, 10)
+    }, 100)
 })

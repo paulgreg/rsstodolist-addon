@@ -83,6 +83,16 @@ export const fetchCount = (server, name) => {
     })
 }
 
+export const fetchSuggest = (server, query) => {
+    const url = `${server}suggest?query=${query}`
+    console.log(`fetchSuggest - ${url}`)
+    return fetch(url)
+    .then(response => response.json())
+    .catch(e => {
+        console.error(e)
+    })
+}
+
 export const notify = (success, message) => {
     chrome.notifications.create("rsstodolist-notification", {
         type: "basic",
@@ -92,11 +102,11 @@ export const notify = (success, message) => {
     });
 }
 
-export const throttle = fn => {
+export const throttle = delay => fn => {
     let timeout
     return e => {
         clearTimeout(timeout)
-        timeout = setTimeout(() => fn(e), 800)
+        timeout = setTimeout(() => fn(e), delay)
     }
 }
 
