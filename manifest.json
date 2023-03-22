@@ -20,16 +20,12 @@
         "*://*/*"
     ],
     "background": {
-        "page": "background-page.html"
+        "service_worker": "background-script.js",
+        "type": "module"
     },
     "action": {
         "default_icon": "imgs/rss.png",
         "default_title": "rsstodolist",
         "default_popup": "index.html"
-    },
-    "browser_specific_settings": {
-        "gecko": {
-            "id": "jid0-fsmvHJm6vogjlOsg61W1N560CwA@jetpack"
-        }
     }
 }
