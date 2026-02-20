@@ -9,7 +9,8 @@
             label                       { font-weight: bold; margin-right: 5px; white-space: pre; }
             .item                       { display: flex; align-items: center; }
             input[type=text],
-            input[type=url]             { flex: 1; border: 1px solid grey; background-color: #E3E9EF; margin: 2px 0; }
+            input[type=url],
+            input[type=password]        { flex: 1; border: 1px solid grey; background-color: #E3E9EF; margin: 2px 0; }
             input[type=image]           { margin-left: 4px; }
             #feed                       { width: 110px; }
             a, #more, legend            { cursor: pointer; }
@@ -37,6 +38,7 @@
                 <div class="item"><label for="description">Description :</label><input type="text" id="description" value="" /></div>
                 <div class="item"><hr></div>
                 <div class="item"><label for="server">Server :</label><input type="url" id="server" value="https://rsstodolist.eu/" placeholder="https://rsstodolist.eu/"></div>
+                <div class="item"><label for="api-key">X-Api-Key :</label><input type="password" id="api-key" value="" placeholder="optional"></div>
             </fieldset>
         </form>
         <script type="module" src="./index.js"></script>

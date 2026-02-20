@@ -11,13 +11,18 @@ const $desc          = document.querySelector("#description")
 const $more          = document.querySelector('#more')
 const $less          = document.querySelector('legend')
 const $server        = document.querySelector('#server')
+const $apiKey        = document.querySelector('#api-key')
 const $datalist      = document.querySelector('datalist')
 let   more           = false
+
+const savePrefs = () => {
+    save($feed.value, $server.value, more, $apiKey.value)
+}
 
 const displayMore = (shouldDisplay) => {
     more = shouldDisplay
     body.classList[shouldDisplay ? 'add' : 'remove']('more')
-    save($feed.value, $server.value, more)
+    savePrefs()
 }
 
 $more.addEventListener('click', displayMore.bind(this, true), false)
@@ -26,11 +31,12 @@ $less.addEventListener('click', displayMore.bind(this, false), false)
 const setPrefsInUI = (prefs) => {
     $feed.value = prefs.feed
     $server.value = prefs.server
+    $apiKey.value = prefs.apiKey
     displayMore(prefs.more)
 }
 
 $goto.addEventListener('click', () => {
-    save($feed.value, $server.value, more)
+    savePrefs()
     chrome.tabs.create({
         url: `${$server.value}?name=${encodeURIComponent($feed.value)}`
     })
@@ -41,9 +47,9 @@ const doAction = (e, add) => {
     e.stopPropagation()
     e.preventDefault()
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-        save($feed.value, $server.value, more)
+        savePrefs()
         console.log('doAction', add, tabs[0].url)
-        send($server.value, add, $feed.value, tabs[0].url, $title.value, $desc.value)
+        send($server.value, add, $feed.value, tabs[0].url, $title.value, $desc.value, $apiKey.value)
         .then(() => {
             window.close()
         })
@@ -59,7 +65,7 @@ const doSuggest = () => {
     if (name.length < 2) return
     $datalist.innerHTML = ''
     return Promise.resolve()
-        .then(() => fetchSuggest($server.value, name))
+        .then(() => fetchSuggest($server.value, name, $apiKey.value))
         .then(results => {
             if (results?.length > 0) {
                 results.filter(s => s?.name?.length)
@@ -81,6 +87,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     load(prefs => {
         setPrefsInUI(prefs)
+
+        const saveServerSettings = throttle(400)(savePrefs)
+        $server.addEventListener('input', saveServerSettings, false)
+        $apiKey.addEventListener('input', saveServerSettings, false)
 
         if (prefs.server !== DEFAULT_SERVER) {
             console.log('register doSuggest')

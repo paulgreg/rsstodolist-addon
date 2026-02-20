@@ -4,7 +4,8 @@ export const DEFAULT_FEED = "somename";
 const prefs = {
     feed: DEFAULT_FEED,
     server: DEFAULT_SERVER,
-    more: false
+    more: false,
+    apiKey: ''
 }
 
 const addEndingSlash = (s = '') => {
@@ -12,10 +13,11 @@ const addEndingSlash = (s = '') => {
     return s
 }
 
-export const save = (feed, server, more) => {
+export const save = (feed, server, more, apiKey) => {
     prefs.feed = feed || DEFAULT_FEED
     prefs.server = addEndingSlash(server) || DEFAULT_SERVER
     prefs.more = Boolean(more)
+    prefs.apiKey = apiKey || ''
     console.log('save', prefs)
     chrome.storage.local.set({ prefs })
 }
@@ -25,6 +27,7 @@ export const load = (cb) => {
         prefs.feed = data?.prefs?.feed ?? DEFAULT_FEED
         prefs.server = data?.prefs?.server ?? DEFAULT_SERVER
         prefs.more = data?.prefs?.more ?? false
+        prefs.apiKey = data?.prefs?.apiKey ?? ''
         console.log('load', prefs)
         cb(prefs)
     }
@@ -36,13 +39,20 @@ export const getPrefsFromStorage = () => prefs
 
 export const cleanUrl = (url) => url.replace(/&?utm_.+?(&|$)/g, '').replace(/(\?)$/, '')
 
-export const send = (server, add, feed, url, title, description) => {
+const buildHeaders = (apiKey) => {
+    if (!apiKey) return undefined
+    return {
+        'X-Api-Key': apiKey
+    }
+}
+
+export const send = (server, add, feed, url, title, description, apiKey) => {
     if (!server || !feed || !url) {
         const message = 'No server, feed or url'
         notify(false, message)
         return Promise.reject(new Error(message))
     }
-    var url = [
+    const parts = [
         server,
         (add ? "add" : "del"),
         "?name=",
@@ -51,30 +61,31 @@ export const send = (server, add, feed, url, title, description) => {
         encodeURIComponent(cleanUrl(url))
     ]
     if (title) {
-        url.push(
+        parts.push(
             "&title=",
             encodeURIComponent(title)
         )
     }
     if (description) {
-        url.push(
+        parts.push(
             "&description=",
             encodeURIComponent(description)
         )
     }
-    console.log('send', url.join(''))
+    const fullUrl = parts.join('')
+    console.log('send', fullUrl)
 
-    return fetch(url.join(''))
+    return fetch(fullUrl, { headers: buildHeaders(apiKey) })
     .then(() => { notify(true, `Feed ${feed} updated`) })
     .catch(e => { 
         console.error(e)
         notify(false, `Error when updating ${feed}`) 
     })
 }
-export const fetchCount = (server, name) => {
+export const fetchCount = (server, name, apiKey) => {
     const url = `${server}count?n=${name}`
     console.log(`fetchCount - ${url}`)
-    return fetch(url)
+    return fetch(url, { headers: buildHeaders(apiKey) })
     .then(response => response.json())
     .then(json => formatNumber(json?.count || 0))
     .catch(e => {
@@ -83,10 +94,10 @@ export const fetchCount = (server, name) => {
     })
 }
 
-export const fetchSuggest = (server, query) => {
+export const fetchSuggest = (server, query, apiKey) => {
     const url = `${server}suggest?query=${query}`
     console.log(`fetchSuggest - ${url}`)
-    return fetch(url)
+    return fetch(url, { headers: buildHeaders(apiKey) })
     .then(response => response.json())
     .catch(e => {
         console.error(e)
