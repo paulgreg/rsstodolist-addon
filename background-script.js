@@ -18,7 +18,16 @@ const installContextMenu = (prefs) =>
         })
 
         chrome.contextMenus.onClicked.addListener(info => {
-            send(prefs.server, info.menuItemId === MENU_ADD, prefs.feed, info.linkUrl, undefined, undefined, prefs.apiKey)
+            send(
+                prefs.server,
+                info.menuItemId === MENU_ADD,
+                prefs.feed,
+                info.linkUrl,
+                undefined,
+                undefined,
+                prefs.authUser,
+                prefs.authPass
+            )
         })
     })
 

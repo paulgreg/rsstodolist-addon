@@ -5,7 +5,8 @@ const prefs = {
     feed: DEFAULT_FEED,
     server: DEFAULT_SERVER,
     more: false,
-    apiKey: ''
+    authUser: '',
+    authPass: ''
 }
 
 const addEndingSlash = (s = '') => {
@@ -13,11 +14,12 @@ const addEndingSlash = (s = '') => {
     return s
 }
 
-export const save = (feed, server, more, apiKey) => {
+export const save = (feed, server, more, authUser, authPass) => {
     prefs.feed = feed || DEFAULT_FEED
     prefs.server = addEndingSlash(server) || DEFAULT_SERVER
     prefs.more = Boolean(more)
-    prefs.apiKey = apiKey || ''
+    prefs.authUser = authUser || ''
+    prefs.authPass = authPass || ''
     console.log('save', prefs)
     chrome.storage.local.set({ prefs })
 }
@@ -27,7 +29,8 @@ export const load = (cb) => {
         prefs.feed = data?.prefs?.feed ?? DEFAULT_FEED
         prefs.server = data?.prefs?.server ?? DEFAULT_SERVER
         prefs.more = data?.prefs?.more ?? false
-        prefs.apiKey = data?.prefs?.apiKey ?? ''
+        prefs.authUser = data?.prefs?.authUser ?? ''
+        prefs.authPass = data?.prefs?.authPass ?? ''
         console.log('load', prefs)
         cb(prefs)
     }
@@ -39,14 +42,14 @@ export const getPrefsFromStorage = () => prefs
 
 export const cleanUrl = (url) => url.replace(/&?utm_.+?(&|$)/g, '').replace(/(\?)$/, '')
 
-const buildHeaders = (apiKey) => {
-    if (!apiKey) return undefined
+const buildHeaders = (authUser, authPass) => {
+    if (!authUser || !authPass) return undefined
     return {
-        'X-Api-Key': apiKey
+        'Authorization': `Basic ${btoa(`${authUser}:${authPass}`)}`
     }
 }
 
-export const send = (server, add, feed, url, title, description, apiKey) => {
+export const send = (server, add, feed, url, title, description, authUser, authPass) => {
     if (!server || !feed || !url) {
         const message = 'No server, feed or url'
         notify(false, message)
@@ -75,17 +78,17 @@ export const send = (server, add, feed, url, title, description, apiKey) => {
     const fullUrl = parts.join('')
     console.log('send', fullUrl)
 
-    return fetch(fullUrl, { headers: buildHeaders(apiKey) })
+    return fetch(fullUrl, { headers: buildHeaders(authUser, authPass) })
     .then(() => { notify(true, `Feed ${feed} updated`) })
     .catch(e => { 
         console.error(e)
         notify(false, `Error when updating ${feed}`) 
     })
 }
-export const fetchCount = (server, name, apiKey) => {
+export const fetchCount = (server, name, authUser, authPass) => {
     const url = `${server}count?n=${name}`
     console.log(`fetchCount - ${url}`)
-    return fetch(url, { headers: buildHeaders(apiKey) })
+    return fetch(url, { headers: buildHeaders(authUser, authPass) })
     .then(response => response.json())
     .then(json => formatNumber(json?.count || 0))
     .catch(e => {
@@ -94,10 +97,10 @@ export const fetchCount = (server, name, apiKey) => {
     })
 }
 
-export const fetchSuggest = (server, query, apiKey) => {
+export const fetchSuggest = (server, query, authUser, authPass) => {
     const url = `${server}suggest?query=${query}`
     console.log(`fetchSuggest - ${url}`)
-    return fetch(url, { headers: buildHeaders(apiKey) })
+    return fetch(url, { headers: buildHeaders(authUser, authPass) })
     .then(response => response.json())
     .catch(e => {
         console.error(e)

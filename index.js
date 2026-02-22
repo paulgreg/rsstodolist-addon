@@ -11,12 +11,13 @@ const $desc          = document.querySelector("#description")
 const $more          = document.querySelector('#more')
 const $less          = document.querySelector('legend')
 const $server        = document.querySelector('#server')
-const $apiKey        = document.querySelector('#api-key')
+const $authUser      = document.querySelector('#auth-user')
+const $authPass      = document.querySelector('#auth-pass')
 const $datalist      = document.querySelector('datalist')
 let   more           = false
 
 const savePrefs = () => {
-    save($feed.value, $server.value, more, $apiKey.value)
+    save($feed.value, $server.value, more, $authUser.value, $authPass.value)
 }
 
 const displayMore = (shouldDisplay) => {
@@ -31,7 +32,8 @@ $less.addEventListener('click', displayMore.bind(this, false), false)
 const setPrefsInUI = (prefs) => {
     $feed.value = prefs.feed
     $server.value = prefs.server
-    $apiKey.value = prefs.apiKey
+    $authUser.value = prefs.authUser
+    $authPass.value = prefs.authPass
     displayMore(prefs.more)
 }
 
@@ -49,7 +51,7 @@ const doAction = (e, add) => {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
         savePrefs()
         console.log('doAction', add, tabs[0].url)
-        send($server.value, add, $feed.value, tabs[0].url, $title.value, $desc.value, $apiKey.value)
+        send($server.value, add, $feed.value, tabs[0].url, $title.value, $desc.value, $authUser.value, $authPass.value)
         .then(() => {
             window.close()
         })
@@ -65,7 +67,7 @@ const doSuggest = () => {
     if (name.length < 2) return
     $datalist.innerHTML = ''
     return Promise.resolve()
-        .then(() => fetchSuggest($server.value, name, $apiKey.value))
+        .then(() => fetchSuggest($server.value, name, $authUser.value, $authPass.value))
         .then(results => {
             if (results?.length > 0) {
                 results.filter(s => s?.name?.length)
@@ -90,7 +92,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const saveServerSettings = throttle(400)(savePrefs)
         $server.addEventListener('input', saveServerSettings, false)
-        $apiKey.addEventListener('input', saveServerSettings, false)
+        $authUser.addEventListener('input', saveServerSettings, false)
+        $authPass.addEventListener('input', saveServerSettings, false)
 
         if (prefs.server !== DEFAULT_SERVER) {
             console.log('register doSuggest')
